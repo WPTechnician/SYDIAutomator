@@ -8,17 +8,14 @@ Instructions
 SYDI Portion
 
 1) Pick a system that is in the same domain as the OUs in your AD where your server objects live.
-2) Copy the scripts folder to a local drive on that server.
+2) Copy the scripts folder to a local drive on that server (C:\scripts).
 3) Edit the SYDIautomated.exe.config file in the scripts folder and update the settings as follows:
 	a) <setting name="OU" 		- the DN of the OU where your servers live.
 	b) <setting name="DCOU"		- the DN of the OU where your domain controllers live.
-	c) <setting name="FTP_Address" 	- the IP address of the FTP server on the web server you are going to use
-	d) <setting name="FTP_UserName" - the FTP server username
-	e) <setting name="FTP_Password" - the FTP server password
-	f) <setting name="Scripts_Path" = the path to the scripts directory
+	c) <setting name="Web_Path" 	- the path to the web for the resulting files to be read by the web front end
 
-4) On the FTP/WEB server, create a folder in the root called "SYDI-Docs" and a folder under that called files.
-5) Once everything is confirmed and saved, double-click sydiautomated.exe in the scripts folder.  If everything is configured properly, a set of html files corresponding to your servers will appear on the FTP server.
+4) On the WEB server, create a folder in the root called "SYDI-Docs" and a folder under that called files.
+5) Once everything is confirmed and saved, double-click sydiautomated.exe in the scripts folder.  If everything is configured properly, a set of html files corresponding to your servers will appear in the path you created on the web server.
 
 Web Portion
 
@@ -31,5 +28,3 @@ Web Portion
 Scheduling
 
 To schedule this, simply create a new task on the server where you performed the first step and point the task at the sydiautomated.exe file.  Make sure it runs in the context of someone who has read/write access to all the file paths.
-
-Note: Having the Web and FTP services running on the same server which makes everything a lot easier.
