@@ -15,6 +15,7 @@ SYDI Portion
 	c) <setting name="FTP_Address" 	- the IP address of the FTP server on the web server you are going to use
 	d) <setting name="FTP_UserName" - the FTP server username
 	e) <setting name="FTP_Password" - the FTP server password
+	f) <setting name="Scripts_Path" = the path to the scripts directory
 
 4) On the FTP/WEB server, create a folder in the root called "SYDI-Docs" and a folder under that called files.
 5) Once everything is confirmed and saved, double-click c:\scripts\sydiautomated.exe.  if everything is configured properly, a set of htm files corresponding to your servers will appear on the FTP server.
