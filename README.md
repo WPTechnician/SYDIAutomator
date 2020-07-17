@@ -32,4 +32,4 @@ Scheduling
 
 To schedule this, simply create a new task on the server where you performed the first step and point the task at the sydiautomated.exe file.  Make sure it runs in the context of someone who has read/write access to all the file paths.
 
-Note: In my environment I have the Web and FTP services running on the same server which makes everything a lot easier.
+Note: Having the Web and FTP services running on the same server which makes everything a lot easier.
