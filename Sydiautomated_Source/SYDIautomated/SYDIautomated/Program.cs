@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Diagnostics;
 using System.IO;
-using EnterpriseDT.Net.Ftp;
+using System.Configuration;
 
 namespace SYDIautomated
 {
@@ -11,79 +10,56 @@ namespace SYDIautomated
         static void Main(string[] args)
         {
             //Clear the results folder
-            if(!Directory.Exists(ou.Default.Scripts_Path))
+            if (!Directory.Exists(@"c:\scripts"))
             {
-                Console.WriteLine("ERROR: Please unzip scripts.zip to a path and update SYDIautomated.exe.config with a valid Script Path");
+                Console.WriteLine("ERROR: Please make sure the c:\\scripts exists.");
                 return;
             }
-            DirectoryInfo di = new DirectoryInfo(ou.Default.Scripts_Path + "\\results");
+            DirectoryInfo di = new DirectoryInfo(@"c:\scripts\results");
             foreach (var fi in di.GetFiles())
             {
                 fi.Delete();
             }
-            //Make sure the values you set in ou.settings are accurate.
             try
             {
-                runcmd("cscript", ou.Default.Scripts_Path + "\\tools\\sydi-wrapper.vbs -a\"" + ou.Default.OU + "\"");
-                runcmd("cscript", ou.Default.Scripts_Path + "\\tools\\sydi-wrapper.vbs -a\"" + ou.Default.DCOU + "\"");
-                runcmd("cmd", "/c forfiles /p " + ou.Default.Scripts_Path + "\\results /c \"cmd /c cscript -nologo " + ou.Default.Scripts_Path + "\\tools\\sydi-transform.vbs -x@file -s" + ou.Default.Scripts_Path + "\\xml\\serverhtml.xsl -o@file.htm\"");
+                runcmd("cscript", @"c:\scripts\tools\sydi-wrapper.vbs -a""" + ConfigurationManager.AppSettings["OU"] + "\"");
+                runcmd("cscript", @"c:\scripts\tools\sydi-wrapper.vbs -a""" + ConfigurationManager.AppSettings["DCOU"] + "\"");
+                runcmd("cmd", "/c forfiles /p c:\\scripts\\results /c \"cmd /c cscript -nologo c:\\scripts\\tools\\sydi-transform.vbs -x@file -sc:\\scripts\\xml\\serverhtml.xsl -o@file.htm\"");
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                EventLog.WriteEntry("SYDI_Automator", ex.Message, EventLogEntryType.Error, 60000);
             }
             try
             {
-                ftpfiles(args);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        private static void ftpfiles(string[] args)
-        {
-            try
-            {
-                FTPConnection ftp = new FTPConnection();
-                ftp.ServerAddress = ou.Default.FTP_Address;
-                ftp.UserName = ou.Default.FTP_UserName;
-                ftp.Password = ou.Default.FTP_Password;
-                ftp.ConnectMode = FTPConnectMode.PASV;
-                ftp.Connect();
-                FTPFile[] files = ftp.GetFileInfos("/SYDI-Docs/Files");
-
-                if (files.Count() > 0)
-                {
-                    foreach (var fi in files)
-                    {
-                        if (fi.Size != 0)
-                        {
-                            string newName = DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Year.ToString() + fi.Name;
-                            ftp.RenameFile("/SYDI-Docs/files/" + fi.Name, "/SYDI-Docs/files/" + newName);
-                        }
-                    }
-                }
-                try
-                {
-                    DirectoryInfo di = new DirectoryInfo(ou.Default.Scripts_Path + "\\results");
-                    foreach (var file in di.GetFiles("*.htm"))
-                    {
-                        ftp.UploadFile(file.FullName, "/SYDI-Docs/files/" + file.Name);
-                    }
-                    ftp.Close();
-                }
-                catch
-                {
-                    Console.WriteLine("There was a problem with the FTP server!");
-                    return;
-                }
+                copyfiles();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                EventLog.WriteEntry("SYDI_Automator", ex.Message, EventLogEntryType.Error, 60000);
             }
         }
+
+        private static void copyfiles()
+        {
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(@"c:\scripts\results");
+                string web_path = ConfigurationManager.AppSettings["Web_Path"];
+                foreach (var file in di.GetFiles("*.htm"))
+                {
+                    string newName = DateTime.Now.Day.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Year.ToString() + file.Name;
+                    file.MoveTo(web_path + "\\" + newName);
+                    //File.Copy(file.FullName, );
+                }
+            }
+            catch(Exception ex)
+            {
+                EventLog.WriteEntry("SYDI_Automator", ex.Message, EventLogEntryType.Error, 60000);
+                return;
+            }
+        }
+        
         private static void runcmd(string cmd, string arg)
         {
             try
@@ -92,15 +68,15 @@ namespace SYDIautomated
                 SYDIWrap.StartInfo.CreateNoWindow = false;
                 SYDIWrap.StartInfo.FileName = cmd;
                 SYDIWrap.StartInfo.UseShellExecute = false;
-                SYDIWrap.StartInfo.WorkingDirectory = ou.Default.Scripts_Path;
+                SYDIWrap.StartInfo.WorkingDirectory = ConfigurationManager.AppSettings["Scripts_Path"];
                 SYDIWrap.StartInfo.Arguments = arg;
                 SYDIWrap.Start();
                 SYDIWrap.WaitForExit();
                 SYDIWrap.Close();
             }
-            catch
+            catch(Exception ex)
             {
-                Console.WriteLine("Failed running the SYDI script command!");
+                EventLog.WriteEntry("SYDI_Automator", ex.Message, EventLogEntryType.Error, 60000);
             }
         }
     }
