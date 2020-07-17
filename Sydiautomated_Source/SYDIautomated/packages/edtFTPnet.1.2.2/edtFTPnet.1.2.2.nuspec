@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>edtFTPnet</id>
+    <version>1.2.2</version>
+    <title>edt FTP client</title>
+    <authors>Enterprise Distributed Technologies</authors>
+    <owners>Enterprise Distributed Technologies</owners>
+    <licenseUrl>http://www.gnu.org/licenses/lgpl-2.1.txt</licenseUrl>
+    <projectUrl>http://enterprisedt.com/products/edtftpnet/editions/</projectUrl>
+    <iconUrl>https://media.licdn.com/media/AAEAAQAAAAAAAALrAAAAJGVlNThkYTdlLTAyYzYtNDllYy1iOGM4LTg5M2Q4ZDQwZmNhMA.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>edtFTPnet/Free – the popular free .NET FTP library
+
+Companies worldwide rely on edtFTPnet/Free to add FTP to their .NET applications. It is a mature, optimized library that has been proven over many years of use.
+
+- Robust and proven FTP library
+ - Supports resuming of transfers, active and passive mode, binary and ASCII.
+- Open source so source code is included
+- Free for commercial use (under the LGPL license)
+- Option of purchasing a non-GPL license and support is always available</description>
+    <summary>edtFTPnet/Free – the popular free .NET FTP library</summary>
+    <copyright>(c) 2003-2005 Enterprise Distributed Technologies Ltd</copyright>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System" targetFramework=".NETFramework1.0" />
+      <frameworkAssembly assemblyName="System.Windows.Forms" targetFramework=".NETFramework1.0" />
+    </frameworkAssemblies>
+  </metadata>
+</package>
