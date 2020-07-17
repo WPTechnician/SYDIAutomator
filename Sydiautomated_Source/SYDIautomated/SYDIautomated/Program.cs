@@ -92,7 +92,7 @@ namespace SYDIautomated
                 SYDIWrap.StartInfo.CreateNoWindow = false;
                 SYDIWrap.StartInfo.FileName = cmd;
                 SYDIWrap.StartInfo.UseShellExecute = false;
-                SYDIWrap.StartInfo.WorkingDirectory = @"C:\scripts\";
+                SYDIWrap.StartInfo.WorkingDirectory = ou.Default.Scripts_Path;
                 SYDIWrap.StartInfo.Arguments = arg;
                 SYDIWrap.Start();
                 SYDIWrap.WaitForExit();
